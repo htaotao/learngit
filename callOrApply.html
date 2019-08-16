@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    // https://blog.csdn.net/u010377383/article/details/80646415
+    function add(c, d) {
+        this.aa = 'htao';
+        return this.a + this.b + c + d;
+    }
+
+    let obj = { a: 1, b: 2 };
+
+    console.log(add.call(obj, 3, 4)); // 10
+    console.log(obj);
+    // es6 call
+    /*
+    * call()的第一个参数就是改变的 this 指向，
+    * 如果为 null 则函数的 this 不变，
+    * 注意，如果在严格模式下 函数体或全局的开头有这句话：'use strict'），
+    * this 会变成 null
+    * */
+    obj = { a: 1, b: 2 };
+    Function.prototype.es6Call = function (context) {
+        // console.log(context);
+        // console.log(this);
+        var context = context || window;
+        context.fn = this;
+        var args = [];
+        for (var i = 1, len = arguments.length; i < len; i++) {
+            args.push(arguments[i]);
+        }
+        var result = context.fn(...args);
+        delete context.fn;
+        return result;
+    };
+
+    console.log(add.es6Call(obj, 3, 4));
+    console.log(obj);
+    console.log(add.es6Call({a: 3, b: 9}, {xx: 1}, 4));
+
+    // es6 apply
+    Function.prototype.es6Apply = function (context, arr) {
+        var context = context || window;
+        context.fn = this;
+        var result;
+        if(!arr){
+            result = context.fn();
+        } else {
+            if (!(arr instanceof Array)) throw new Error('params must be array');
+            result = context.fn(...arr);
+        }
+        delete context.fn;
+        return result
+    }
+    console.log(add.es6Apply(obj, [1, 2]));
+    console.log(obj);
+</script>
+</body>
+</html>

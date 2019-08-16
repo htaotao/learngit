@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        /*
+        * js在es6语法中也引入了类的概念，
+        * 不过还是基于es5的原型链实现的语法糖
+        * 用原型模式来实现js的继承
+        *
+        * prototype这个属性实际是一个指针，指向一个对象，
+        * 而这个对象包含有特定类型的所有实例共享的属性和方法
+        * */
+
+        // class
+        class Hello {
+            constructor(x) {
+                this.x = x;
+            }
+            greet() {
+                console.log('hello, ' + this.x);
+            }
+        }
+        let world = new Hello('world');
+        console.log(world);
+        world.greet();
+
+        // es5
+        var Hello = (function () {
+            function Hello(x) {
+                this.x = x;
+            }
+            Hello.prototype.greet = function () {
+                console.log('Hello, ' + this.x);
+            };
+            return Hello;
+        }());
+        var world = new Hello("world");
+        console.log(world);
+        world.greet();
+
+        // 静态方法
+        // class
+        class Hello {
+            constructor() {
+                this.x = x;
+            }
+            static greet() {
+                console.log("Hello, world")
+            }
+        }
+        // es6
+        var Hello = (function () {
+            function Hello() {
+                this.x = x;
+            }
+            Hello.greet = function () {
+                console.log("Hello, world")
+            };
+            return Hello;
+        }())
+
+        /*
+        * class通过关键字extends来实现继承，
+        * 这也是比es5通过原型链实现继承的一个优势：清晰方便。
+        * 那么我们来看看es5语法如何实现继承
+        * */
+
+        // class
+        class Hello {
+             constructor(x) {
+                 this.x = x
+             }
+             static greet() {
+                  console.log("Hello, world")
+             }
+        }
+        class Hi extends Hello {
+            constructor(x) {
+                super(x)
+            }
+        }
+        //es5
+        var __extends = (this && this.__extends) || (function () {
+            var extendStatics = function (d, b) {
+                extendStatics = Object.setPrototypeOf ||
+                    ({__proto__: []} instanceof Array && function (d, b) { d.__proto__ = b;}) ||
+                    function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+                return extendStatics(d, b)
+            };
+            return function (d, b) {
+                extendStatics(d, b);
+                function __() { this.constructor = d; }
+                d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+                console.log(111)
+            };
+        })();
+        var Hello = (function () {
+            function Hello(x) {
+                this.x = x;
+            }
+            Hello.greet = function () {
+                console.log('Hello, world')
+            };
+            return Hello;
+        }());
+        var Hi = (function (_super) {
+            __extends(Hi, _super);
+            function Hi(x) {
+                return _super.call(this, x) || this;
+            }
+            return Hi;
+        }(Hello));
+        var htao= new Hi();
+        console.log(htao)
+    </script>
+</body>
+
+</html>

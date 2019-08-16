@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    // https://blog.csdn.net/u010377383/article/details/80646415
+    function foo(c, d) {
+        this.b = 100;
+        console.log(this.a);
+        console.log(this.b);
+        console.log(c);
+        console.log(d);
+    }
+    var func = foo.bind({a: 1}, '1st');
+    func('2nd');
+    // 即使再次call也不能改变this
+    func.call({a: 2}, '3rd');
+    // 当bind返回的函数作为构造函数的时候，
+    // bind是指定的this值会失效，但是传入的参数依然生效
+    // 所以使用func为构造函数时，this不会指向{a: 1}对象，this.a的值为undefined。如下
+    // new func('4th'); // undefined 100 1st 4th
+
+    Function.prototype.es6Bind = function (context, ...rest) {
+        if(typeof this !== 'function') throw new TypeError('invalid invoked!');
+        var self = this;
+        return function F(...args) {
+            if (this instanceof F) {
+                return new self(...rest, ...args)
+            }
+            return self.apply(context, rest.concat(args))
+        }
+    };
+
+    var func = foo.es6Call({a: 1}, '1st');
+    func('2nd');
+    func.call({a: 2}, '3rd');
+    new func('4th');
+
+</script>
+</body>
+</html>

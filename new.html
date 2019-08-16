@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    /*
+    * new关键字内部干了如下三件事（已知构造函数为Func）：
+    * 1.创建一个空对象，并使该空对象继承Func.prototype；
+    * 2.执行构造函数，并将this指向刚刚创建的新对象；
+    * 3.返回新对象；
+    * */
+    // https://blog.csdn.net/u010342862/article/details/80016695
+    // 创建Person构造函数，函数为name，age
+    function Person(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+    // 实例化对象小明
+    xm = new Person('xiaoming', 18);
+    // 打印实例化出来的对象小明
+    console.log(xm);
+
+    function _new() {
+        // 1. 拿到传入的参数中的第一个参数，即构造函数名为Func
+        var Func = [].shift.call(arguments);
+        // 2. 创建一个空对象obj，并让其继承Func.prototype
+        var obj =Object.create(Func.prototype);
+        // let obj = {
+        //      __proto__ : fun.prototype
+        // }
+        // 3. 执行构造函数，并将this指向创建的空对象obj
+        Func.apply(obj, arguments);
+        // 4. 返回创建的对象obj
+        return obj
+    }
+
+    // 优先级： 小括号 》属性访问. 》new foo() 》foo()
+    function getName() {
+        console.log(1);
+    }
+    function Foo() {
+        this.getName1 = function () {
+            console.log(2);
+        };
+        return this;
+    }
+    Foo.getName2 = function () {
+        console.log(3);
+    };
+    var a = new Foo.getName2();
+    var b = new Foo().getName1();
+    var c = new new Foo().getName1();
+    new Date().getTime();
+    (new Date).getTime();
+    // new Date.getTime(); // 报错
+</script>
+</body>
+</html>
